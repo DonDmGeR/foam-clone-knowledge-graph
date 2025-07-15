@@ -1,0 +1,6 @@
+{
+  "name": "Foam Clone - Knowledge Graph Visualizer v0.20",
+  "description": "An interactive knowledge graph that visualizes Markdown notes and their connections. Explore relationships between your ideas with a dynamic, force-directed graph, search for notes, and inspect their content. Now with local directory support.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
