@@ -9,6 +9,7 @@ import * as d3 from 'd3';
 import { NodeData, GraphData, NodeType, SimulationParams, VisibilityOptions, NodeScaleMode } from '../types';
 import usePersistentState from '../hooks/usePersistentState';
 import AdvancedMarkdownEditor from './AdvancedMarkdownEditor';
+import GlowButton from './GlowButton';
 
 
 interface SidebarProps {
@@ -92,26 +93,29 @@ const DataSourcePanel: React.FC<{
       </p>
     </div>
     <div className="flex gap-2">
-    <button
+    <GlowButton
+      variant="secondary"
+      size="medium"
       onClick={onSelect}
-      className="flex-1 flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded transition-colors"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+      icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
         <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-      </svg>
+      </svg>}
+      className="flex-1"
+    >
       Select Directory
-    </button>
-    <button
+    </GlowButton>
+    <GlowButton
+      variant="success"
+      size="medium"
       onClick={onCreateFile}
       disabled={isLoading || !dirName}
-      className="flex-1 flex items-center justify-center bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded transition-colors disabled:bg-slate-400 dark:disabled:bg-slate-600 disabled:cursor-not-allowed"
-      title={dirName ? "Create a new note in the root" : "Select a directory first"}
-    >
-       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+      icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
         <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-      </svg>
+      </svg>}
+      className="flex-1"
+    >
       New Note
-    </button>
+    </GlowButton>
     </div>
   </div>
 );
@@ -145,13 +149,15 @@ const DisplayOptionsPanel: React.FC<{
         <label className="font-semibold text-slate-600 dark:text-slate-400">Node Scale Mode</label>
         <div className="flex gap-2 rounded-md bg-gray-200 dark:bg-slate-900 p-1">
           {(['size', 'connections'] as NodeScaleMode[]).map(mode => (
-            <button 
+            <GlowButton
               key={mode}
+              variant={options.nodeScaleMode === mode ? "primary" : "secondary"}
+              size="small"
               onClick={() => setOptions({ ...options, nodeScaleMode: mode })}
-              className={`flex-1 p-1.5 rounded-md text-xs font-semibold capitalize transition-colors ${options.nodeScaleMode === mode ? 'bg-white dark:bg-slate-700 text-cyan-600 dark:text-cyan-300 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:bg-gray-300/50 dark:hover:bg-slate-800/50'}`}
+              className="flex-1"
             >
               {mode}
-            </button>
+            </GlowButton>
           ))}
         </div>
       </div>
@@ -336,26 +342,38 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </div>
           <div className="flex items-center ml-2 flex-shrink-0">
             {isEditable && dirName && (
-              <button onClick={handleRename} title="Rename file" className="p-1.5 rounded-md text-slate-500 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors disabled:opacity-50" disabled={isLoading}>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <GlowButton
+                variant="secondary"
+                size="small"
+                onClick={handleRename}
+                disabled={isLoading}
+                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z" />
-                </svg>
-              </button>
+                </svg>}
+              />
             )}
             {dirName && node.type === NodeType.FOLDER && (
-              <button onClick={() => onCreateFile(node.id)} title="Create new note in this folder" className="ml-2 p-1.5 rounded-md text-slate-500 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <GlowButton
+                variant="success"
+                size="small"
+                onClick={() => onCreateFile(node.id)}
+                className="ml-2"
+                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V8z" clipRule="evenodd" />
-                </svg>
-              </button>
+                </svg>}
+              />
             )}
             {isEditable && dirName && (
-              <button onClick={() => setEditorFullscreen(!isEditorFullscreen)} title={isEditorFullscreen ? "Exit Fullscreen" : "Fullscreen"} className="ml-2 p-1.5 rounded-md text-slate-500 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors">
-                {isEditorFullscreen ?
+              <GlowButton
+                variant="secondary"
+                size="small"
+                onClick={() => setEditorFullscreen(!isEditorFullscreen)}
+                className="ml-2"
+                icon={isEditorFullscreen ?
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 3h6m0 0v6m0-6l-7 7M9 21H3m0 0v-6m0 6l7-7" /></svg> :
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" /></svg>
                 }
-              </button>
+              />
             )}
           </div>
       </div>
@@ -374,11 +392,14 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
         <p className="font-semibold text-slate-600 dark:text-slate-400">Path</p>
         <div className="flex items-center gap-2">
             <p className="flex-1 text-slate-500 dark:text-slate-300 font-mono text-xs break-all bg-gray-200 dark:bg-slate-900 p-2 rounded-md">{node.path}</p>
-            <button onClick={handleCopyPath} title="Copy file path" className="p-2 rounded-md text-slate-500 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-            </button>
+            <GlowButton
+              variant="secondary"
+              size="small"
+              onClick={handleCopyPath}
+              icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>}
+            />
         </div>
       </div>
       
@@ -412,17 +433,23 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
       {isEditable && dirName && (
         <div className={`flex items-center gap-2 pt-2 ${isEditorFullscreen ? 'flex-shrink-0' : ''}`}>
-          <button onClick={handleSave} disabled={!isDirty || isLoading} className="flex-1 flex items-center justify-center bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded transition-colors disabled:bg-slate-400 dark:disabled:bg-slate-600 disabled:cursor-not-allowed">
-            {isLoading ? (
-               <>
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
-                Saving...
-               </>
-            ) : (isDirty ? 'Save Changes' : 'Saved')}
-          </button>
-          <button onClick={handleDelete} disabled={isLoading} title="Delete File" className="p-2 flex items-center justify-center bg-red-600 hover:bg-red-700 text-white font-bold rounded transition-colors disabled:bg-slate-400 dark:disabled:bg-slate-600 disabled:cursor-not-allowed">
-             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
-          </button>
+          <GlowButton
+            variant="secondary"
+            size="medium"
+            onClick={handleSave}
+            disabled={!isDirty || isLoading}
+            loading={isLoading}
+            className="flex-1"
+          >
+            {isDirty ? 'Save Changes' : 'Saved'}
+          </GlowButton>
+          <GlowButton
+            variant="danger"
+            size="medium"
+            onClick={handleDelete}
+            disabled={isLoading}
+            icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" /></svg>}
+          />
         </div>
       )}
 
@@ -431,15 +458,17 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           <p className="font-semibold text-slate-600 dark:text-slate-400">Linked From ({backlinks.length})</p>
           <div className="mt-1 space-y-1 max-h-32 overflow-y-auto pr-1">
             {backlinks.map(backlinkNode => (
-              <button
+              <GlowButton
                 key={backlinkNode.id}
+                variant="secondary"
+                size="small"
                 onClick={() => focusNode(backlinkNode)}
-                className="w-full text-left p-1.5 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700/70 transition-colors flex items-center text-slate-700 dark:text-slate-300"
-                title={`Focus on ${backlinkNode.name}`}
+                fullWidth={true}
+                icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M13 5l7 7-7 7" /></svg>}
+                className="text-left justify-start"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-slate-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M13 5l7 7-7 7" /></svg>
                 <span className="truncate">{backlinkNode.name}</span>
-              </button>
+              </GlowButton>
             ))}
           </div>
         </div>
@@ -482,12 +511,17 @@ const ControlsPanel: React.FC<ControlsPanelProps> = ({ params, setParams, onRese
       <input type="range" min="0" max="1" step="0.05" value={params.centerForce} onChange={e => setParams({...params, centerForce: +e.target.value})} className="w-full h-2 bg-slate-300 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer" />
     </div>
     <div className="pt-2">
-      <button onClick={onReset} title="Reset simulation parameters to default" className="w-full flex items-center justify-center bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold py-2 px-4 rounded transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2">
+      <GlowButton
+        variant="secondary"
+        size="medium"
+        onClick={onReset}
+        fullWidth={true}
+        icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0011.664 0l3.181-3.183m-11.664 0l4.992-4.992m-4.993 0l-3.181 3.183a8.25 8.25 0 000 11.664l3.181 3.183" />
-        </svg>
-        <span>Reset Simulation</span>
-      </button>
+        </svg>}
+      >
+        Reset Simulation
+      </GlowButton>
     </div>
   </div>
 );
@@ -496,12 +530,22 @@ const ExportPanel: React.FC<{ onExportSVG: () => void, onExportPNG: () => void }
   <div className="space-y-3 text-sm">
     <p className="text-slate-600 dark:text-slate-400">Save a snapshot of the current graph view.</p>
     <div className="flex flex-col sm:flex-row gap-2">
-      <button onClick={onExportSVG} className="flex-1 flex items-center justify-center bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded transition-colors">
+      <GlowButton
+        variant="primary"
+        size="medium"
+        onClick={onExportSVG}
+        className="flex-1"
+      >
         Export as SVG
-      </button>
-      <button onClick={onExportPNG} className="flex-1 flex items-center justify-center bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded transition-colors">
+      </GlowButton>
+      <GlowButton
+        variant="primary"
+        size="medium"
+        onClick={onExportPNG}
+        className="flex-1"
+      >
         Export as PNG
-      </button>
+      </GlowButton>
     </div>
   </div>
 );
@@ -521,13 +565,20 @@ const SearchPanel: React.FC<{ searchTerm: string, setSearchTerm: (t: string) => 
       <div className="mt-3 max-h-48 overflow-y-auto text-sm pr-1">
         {results.length > 0 ? (
           results.map(node => (
-            <button key={node.id} onClick={() => onResultClick(node)} className="w-full text-left p-2 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center">
-              <div
-                className="w-3 h-3 rounded-full mr-2 flex-shrink-0 border border-slate-400/50"
+            <GlowButton
+              key={node.id}
+              variant="secondary"
+              size="small"
+              onClick={() => onResultClick(node)}
+              fullWidth={true}
+              icon={<div
+                className="w-3 h-3 rounded-full flex-shrink-0 border border-slate-400/50"
                 style={{ backgroundColor: getNodeColor(node) }}
-              ></div>
+              ></div>}
+              className="text-left justify-start"
+            >
               <span className="truncate text-slate-800 dark:text-slate-200">{node.name}</span>
-            </button>
+            </GlowButton>
           ))
         ) : (
           <p className="text-slate-500 dark:text-slate-400 p-2 text-center">No results found.</p>
@@ -538,16 +589,15 @@ const SearchPanel: React.FC<{ searchTerm: string, setSearchTerm: (t: string) => 
 );
 
 const ThemeToggle: React.FC<{ theme: 'light' | 'dark', onToggle: () => void }> = ({ theme, onToggle }) => (
-  <button
+  <GlowButton
+    variant="secondary"
+    size="small"
     onClick={onToggle}
-    className="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-gray-100 dark:focus-visible:ring-offset-slate-900 transition-colors"
-    aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-  >
-    {theme === 'light' ? 
+    icon={theme === 'light' ? 
       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg> :
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.121-3.536a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM4.05 14.536l.707-.707a1 1 0 10-1.414-1.414l-.707.707a1 1 0 001.414 1.414zM10 18a1 1 0 011-1h1a1 1 0 110 2h-1a1 1 0 01-1-1zM3.05 7.464l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1z" clipRule="evenodd" /></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" /></svg>
     }
-  </button>
+  />
 );
 
 

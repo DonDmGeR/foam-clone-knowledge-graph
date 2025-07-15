@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glow Button Theme Test</title>
+    <link rel="stylesheet" href="index.css">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .light-theme {
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .dark-theme {
+            background-color: #020617;
+            color: #e2e8f0;
+        }
+
+        .test-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+        }
+
+        .dark-theme .test-section {
+            border-color: #475569;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="light-theme">
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+
+    <h1>Glow Button Theme Integration Test</h1>
+
+    <div class="test-section">
+        <h2>Button Variants</h2>
+        <div class="button-grid">
+            <button class="glow-button glow-button-primary">Primary</button>
+            <button class="glow-button glow-button-secondary">Secondary</button>
+            <button class="glow-button glow-button-danger">Danger</button>
+            <button class="glow-button glow-button-success">Success</button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Button Sizes</h2>
+        <div class="button-grid">
+            <button class="glow-button glow-button-primary glow-button-small">Small</button>
+            <button class="glow-button glow-button-primary">Medium</button>
+            <button class="glow-button glow-button-primary glow-button-large">Large</button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Button States</h2>
+        <div class="button-grid">
+            <button class="glow-button glow-button-secondary">Normal</button>
+            <button class="glow-button glow-button-secondary" disabled>Disabled</button>
+            <button class="glow-button glow-button-secondary glow-button-loading">Loading</button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>CSS Custom Property Fallback Test</h2>
+        <p>These buttons should work even in browsers that don't support CSS custom properties:</p>
+        <div class="button-grid">
+            <button class="glow-button glow-button-primary">Fallback Primary</button>
+            <button class="glow-button glow-button-secondary">Fallback Secondary</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const html = document.documentElement;
+
+            if (body.classList.contains('light-theme')) {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+                html.classList.add('dark');
+            } else {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                html.classList.remove('dark');
+            }
+        }
+
+        // Test CSS custom property support and theme switching
+        function testCSSCustomProperties() {
+            const testElement = document.createElement('div');
+            testElement.style.setProperty('--test-var', 'test');
+            const supported = testElement.style.getPropertyValue('--test-var') === 'test';
+
+            const statusElement = document.createElement('p');
+            statusElement.textContent = `CSS Custom Properties Support: ${supported ? 'YES' : 'NO'}`;
+            statusElement.style.fontWeight = 'bold';
+            statusElement.style.color = supported ? 'green' : 'red';
+
+            // Test theme switching with glow buttons
+            const themeTestElement = document.createElement('p');
+            themeTestElement.innerHTML = `
+                <strong>Theme Integration Test:</strong><br>
+                Toggle the theme above to verify button colors change correctly.<br>
+                <small>Light theme: Lighter glow colors | Dark theme: Enhanced glow colors</small>
+            `;
+            themeTestElement.style.marginTop = '1rem';
+
+            const testSection = document.querySelector('.test-section:last-child');
+            testSection.appendChild(statusElement);
+            testSection.appendChild(themeTestElement);
+        }
+
+        // Run tests when page loads
+        document.addEventListener('DOMContentLoaded', testCSSCustomProperties);
+    </script>
+</body>
+
+</html>
